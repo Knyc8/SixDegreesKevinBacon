@@ -27,4 +27,8 @@ public class MovieDatabaseBuilder {
         return movies;
     }
 
+    public static void createFile()
+    {
+        File newFile = new File("src/bacon_costars");
+    }
 }
