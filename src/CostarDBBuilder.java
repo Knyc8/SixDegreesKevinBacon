@@ -35,6 +35,35 @@ public class CostarDBBuilder {
         }
     }
 
+    public static void createCostarLevel1(ArrayList<SimpleMovie> movies, String actorName) {
+        try {
+            FileWriter baconMovies = new FileWriter("src/actor_costars");
+            baconNumber++;
+            for (SimpleMovie movie : movies)
+            {
+                ArrayList<String> cast = movie.getActors();
+                for (String actor : cast)
+                {
+                    if (actor.equalsIgnoreCase(actorName))
+                    {
+                        baconMovies.write(movie.getTitle() + "---");
+                        for (String costar : movie.getActors())
+                        {
+                            baconMovies.write(costar + ":");
+                        }
+                        baconMovies.write("\n");
+                    }
+                }
+            }
+            baconMovies.close();
+            System.out.println("Successfully wrote to the file.");
+        } catch (
+                IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+
     public static String searchActor(String actorName, ArrayList<SimpleMovie> baconMovies)
     {
         String baconLevel = "";

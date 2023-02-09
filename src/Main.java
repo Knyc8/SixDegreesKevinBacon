@@ -24,6 +24,7 @@ public class Main {
         Scanner s = new Scanner(System.in);
         System.out.print("Enter an actor(ress): ");
         String actor = s.nextLine();
+        CostarDBBuilder.createCostarLevel1(movies, actor);
         System.out.println(CostarDBBuilder.searchActor(actor, baconMovies));
     }
 }
