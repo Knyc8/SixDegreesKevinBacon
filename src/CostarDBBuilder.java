@@ -4,11 +4,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class CostarDBBuilder {
-    private static int baconNumber = 0;
+    public static int baconNumber = 0;
     //creates a new file of the actors that have worked with Bacon
     public static void createLevel1(ArrayList<SimpleMovie> movies) {
         try {
-        FileWriter baconMovies = new FileWriter("src/bacon_costars");
+        FileWriter baconMovies = new FileWriter("src/bacon_movies");
+        FileWriter baconCostars = new FileWriter("src/bacon_costars");
+        ArrayList<String> costarList = new ArrayList<String>();
         baconNumber++;
         for (SimpleMovie movie : movies)
         {
@@ -21,13 +23,22 @@ public class CostarDBBuilder {
                     for (String costar : movie.getActors())
                     {
                         baconMovies.write(costar + ":");
+                        if (!costar.equals("Kevin Bacon") && costarList.indexOf(costar) == -1)
+                        {
+                            costarList.add(costar);
+                        }
                     }
                     baconMovies.write("\n");
                 }
             }
         }
+
+        for (String costar : costarList)
+        {
+            baconCostars.write(costar + "\n");
+        }
         baconMovies.close();
-        System.out.println("Successfully wrote to the file.");
+        baconCostars.close();
     } catch (
     IOException e) {
             System.out.println("An error occurred.");
@@ -35,9 +46,57 @@ public class CostarDBBuilder {
         }
     }
 
-    public static void createCostarLevel1(ArrayList<SimpleMovie> movies, String actorName) {
+    public static void createLevels(ArrayList<SimpleMovie> movies, ArrayList<String> baconCostars) {
+        baconNumber++;
+        ArrayList<SimpleMovie> baconCostarMovies = new ArrayList<SimpleMovie>();
+        for (SimpleMovie movie : movies)
+        {
+            for (String actor : baconCostars)
+            {
+                if (movie.getActors().contains(actor) && baconCostarMovies.indexOf(movie) == -1)
+                {
+                        baconCostarMovies.add(movie);
+                }
+            }
+        }
+
         try {
-            FileWriter baconMovies = new FileWriter("src/actor_costars");
+            FileWriter baconCMovies = new FileWriter("src/bacon_movies" + baconNumber);
+            FileWriter baconCMCostars = new FileWriter("src/bacon_costars" + baconNumber);
+            ArrayList<String> costarList = new ArrayList<String>();
+            for (SimpleMovie movie : baconCostarMovies)
+            {
+                ArrayList<String> cast = movie.getActors();
+                baconCMovies.write(movie.getTitle() + "---");
+                for (String costar : movie.getActors())
+                {
+                    baconCMovies.write(costar + ":");
+                    if (!costar.equals("Kevin Bacon") && costarList.indexOf(costar) == -1)
+                    {
+                            costarList.add(costar);
+                    }
+                }
+                baconCMovies.write("\n");
+            }
+
+            for (String costar : costarList)
+            {
+                baconCMCostars.write(costar + "\n");
+            }
+            baconCMovies.close();
+            baconCMCostars.close();
+        } catch (
+                IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+
+    public static void createActorMovies(ArrayList<SimpleMovie> movies, String actorName) {
+        try {
+            FileWriter actorMovies = new FileWriter("src/actor_movies");
+            FileWriter actorCostars = new FileWriter("src/actor_costars");
+            ArrayList<String> costarList = new ArrayList<String>();
             baconNumber++;
             for (SimpleMovie movie : movies)
             {
@@ -46,43 +105,29 @@ public class CostarDBBuilder {
                 {
                     if (actor.equalsIgnoreCase(actorName))
                     {
-                        baconMovies.write(movie.getTitle() + "---");
+                        actorMovies.write(movie.getTitle() + "---");
                         for (String costar : movie.getActors())
                         {
-                            baconMovies.write(costar + ":");
+                            actorMovies.write(costar + ":");
+                            if (!costar.equals(actorName) || costarList.indexOf(costar) == -1)
+                            {
+                                costarList.add(costar);
+                            }
                         }
-                        baconMovies.write("\n");
+                        actorMovies.write("\n");
                     }
                 }
             }
-            baconMovies.close();
-            System.out.println("Successfully wrote to the file.");
+            for (String costar : costarList)
+            {
+                actorCostars.write(costar + "\n");
+            }
+            actorMovies.close();
+            actorCostars.close();
         } catch (
                 IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
-    }
-
-    public static String searchActor(String actorName, ArrayList<SimpleMovie> baconMovies)
-    {
-        String baconLevel = "";
-        for (SimpleMovie movie : baconMovies)
-        {
-            for (String actor : movie.getActors())
-            {
-                boolean sameActor = actor.equalsIgnoreCase(actorName);
-                if (sameActor == true)
-                {
-                    baconLevel = actorName + " --> " + movie.getTitle() + " --> Kevin Bacon | Bacon Number: " + baconNumber;
-                    break;
-                }
-                else
-                {
-                    baconLevel = "There is no such actor that Bacon has played with.";
-                }
-            }
-        }
-        return baconLevel;
     }
 }
